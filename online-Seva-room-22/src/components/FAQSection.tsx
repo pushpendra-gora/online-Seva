@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, CheckCircle2 } from 'lucide-react';
-import { FAQS } from '../data/servicesData';
+import { HelpCircle, ChevronDown, MessageCircle } from 'lucide-react';
+import { FAQS, CONTACT_PUSHPENDRA, getWhatsAppUrl } from '../data/servicesData';
+import { useLanguage } from '../context/LanguageContext';
 
 export const FAQSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { t, isHindi } = useLanguage();
 
   const toggle = (idx: number) => {
     setOpenIndex(openIndex === idx ? null : idx);
@@ -16,19 +18,22 @@ export const FAQSection: React.FC = () => {
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-900 border border-amber-300 px-3.5 py-1.5 rounded-full text-xs font-bold mb-2">
             <HelpCircle className="w-4 h-4 text-amber-600" />
-            <span>अक्सर पूछे जाने वाले सवाल (FAQ)</span>
+            <span>{t.faqBadge}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black font-heading text-[#0b1f3f]">
-            विद्यार्थियों की मुख्य शंकाएँ व समाधान
+            {t.faqHeading}
           </h2>
           <p className="text-sm text-slate-600 mt-1">
-            टोकन फीस, सर्विस चार्ज और रूम 22 की प्रक्रिया से जुड़े सभी सवालों के जवाब।
+            {t.faqSubheading}
           </p>
         </div>
 
         <div className="space-y-3">
           {FAQS.map((faq, idx) => {
             const isOpen = openIndex === idx;
+            const question = isHindi ? faq.q : (faq.qEn || faq.q);
+            const answer = isHindi ? faq.a : (faq.aEn || faq.a);
+
             return (
               <div
                 key={idx}
@@ -43,7 +48,7 @@ export const FAQSection: React.FC = () => {
                     <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-900 text-xs flex items-center justify-center shrink-0 font-bold">
                       Q{idx + 1}
                     </span>
-                    <span>{faq.q}</span>
+                    <span>{question}</span>
                   </span>
                   <ChevronDown
                     className={`w-5 h-5 text-slate-400 transition-transform duration-200 shrink-0 ${
@@ -54,12 +59,28 @@ export const FAQSection: React.FC = () => {
 
                 {isOpen && (
                   <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 border-t border-slate-100 leading-relaxed bg-slate-50/50">
-                    <p>{faq.a}</p>
+                    <p>{answer}</p>
                   </div>
                 )}
               </div>
             );
           })}
+        </div>
+
+        {/* Need more help banner */}
+        <div className="mt-8 text-center bg-white p-5 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span className="text-xs sm:text-sm text-slate-700 font-medium">
+            {t.faqNeedHelp}
+          </span>
+          <a
+            href={getWhatsAppUrl(CONTACT_PUSHPENDRA.phone, t.whatsappDirectMsg)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm py-2 px-4 rounded-xl shadow-xs transition"
+          >
+            <MessageCircle className="w-4 h-4 fill-white" />
+            <span>Pushpendra WhatsApp</span>
+          </a>
         </div>
 
       </div>
