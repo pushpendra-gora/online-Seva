@@ -4,20 +4,74 @@ export interface ServiceItem {
   name: string;
   englishName: string;
   shortDesc: string;
+  shortDescEn?: string;
   serviceFee: number;
   firstTimeFee: number;
   tokenFeeDisplay: string;
+  tokenFeeDisplayEn?: string;
   tokenFeeValue: number | string;
   tokenFeeNote: string;
+  tokenFeeNoteEn?: string;
   tokenCategory?: string;
+  tokenCategoryEn?: string;
   isTokenFree?: boolean;
   requiredDocs: string[];
+  requiredDocsEn?: string[];
   helpPoints: string[];
+  helpPointsEn?: string[];
   processingTime: string;
+  processingTimeEn?: string;
   biometricRequired?: boolean;
   importantNote?: string;
+  importantNoteEn?: string;
   portalName: string;
 }
+
+export const getServiceName = (item: ServiceItem, lang: 'hi' | 'en') =>
+  lang === 'en' ? item.englishName : item.name;
+
+export const getServiceDesc = (item: ServiceItem, lang: 'hi' | 'en') =>
+  lang === 'en' ? (item.shortDescEn || item.englishName + ' guidance and error-free application for students.') : item.shortDesc;
+
+export const getServiceTokenDisplay = (item: ServiceItem, lang: 'hi' | 'en') => {
+  if (lang === 'en') {
+    if (item.tokenFeeDisplayEn) return item.tokenFeeDisplayEn;
+    if (item.isTokenFree) {
+      if (item.id === 'aadhaar-email') return '₹0 (Free until 31 Dec)';
+      return '₹0 (Free / No Token)';
+    }
+    return item.tokenFeeDisplay
+      .replace('सरकारी टोकन', 'Govt Token')
+      .replace('पोर्टल फीस', 'Portal Fee')
+      .replace('सरकारी पोर्टल फीस', 'Govt Portal Fee')
+      .replace('सरकारी चालान', 'Govt Challan');
+  }
+  return item.tokenFeeDisplay;
+};
+
+export const getServiceTokenNote = (item: ServiceItem, lang: 'hi' | 'en') => {
+  if (lang === 'en') {
+    if (item.tokenFeeNoteEn) return item.tokenFeeNoteEn;
+    if (item.isTokenFree) {
+      if (item.id === 'aadhaar-email') return 'UIDAI portal email ID update official token is completely ₹0 (Free) until 31 December.';
+      return 'No official government portal charge for this application (Token fee is ₹0 free).';
+    }
+    return item.tokenFeeNote;
+  }
+  return item.tokenFeeNote;
+};
+
+export const getServiceProcessingTime = (item: ServiceItem, lang: 'hi' | 'en') =>
+  lang === 'en' ? (item.processingTimeEn || item.processingTime) : item.processingTime;
+
+export const getServiceRequiredDocs = (item: ServiceItem, lang: 'hi' | 'en') =>
+  lang === 'en' && item.requiredDocsEn ? item.requiredDocsEn : item.requiredDocs;
+
+export const getServiceHelpPoints = (item: ServiceItem, lang: 'hi' | 'en') =>
+  lang === 'en' && item.helpPointsEn ? item.helpPointsEn : item.helpPoints;
+
+export const getServiceImportantNote = (item: ServiceItem, lang: 'hi' | 'en') =>
+  lang === 'en' && item.importantNoteEn ? item.importantNoteEn : item.importantNote;
 
 export const CONTACT_PUSHPENDRA = {
   name: 'Pushpendra Gora',
@@ -395,33 +449,54 @@ export const SERVICES_LIST: ServiceItem[] = [
   },
 ];
 
-export const FAQS = [
+export interface FAQItem {
+  q: string;
+  qEn?: string;
+  a: string;
+  aEn?: string;
+}
+
+export const FAQS: FAQItem[] = [
   {
     q: 'सर्विस चार्ज (Service Charge) और टोकन फीस (Token Fee) में क्या फर्क है?',
+    qEn: 'What is the difference between Service Charge and Token Fee?',
     a: 'सर्विस चार्ज (₹25 या पहली बार ₹20) हमारी ओर से आपको सही फॉर्म भरने, डॉक्यूमेंट स्कैन/रीसाइज करने और आवेदन प्रक्रिया पूरी कराने में की गई मेहनत की फीस है। टोकन फीस सरकारी विभाग (जैसे NSDL, UIDAI या यूनिवर्सिटी पोर्टल) का आधिकारिक शुल्क होता है जो सीधे उनके सरकारी खाते में कटता है।',
+    aEn: 'The service charge (₹25 or ₹20 for first-time visitors) is our assistance fee for accurate data entry, document resizing, and error-free submission. The token fee is the official government/portal charge (e.g., NSDL, UIDAI) paid directly to the respective department.',
   },
   {
     q: 'पहली बार आने वाले विद्यार्थियों के लिए क्या ऑफर है?',
+    qEn: 'What is the discount offer for first-time visiting students?',
     a: 'जो भी विद्यार्थी पहली बार हमारे पास आते हैं, उनसे प्रति काम केवल ₹20 सर्विस चार्ज लिया जाता है (₹5 की सीधी छूट)। इसके अलावा जो भी सरकारी/पोर्टल टोकन फीस होगी वह ज्यों की त्यों लगेगी।',
+    aEn: 'Any student visiting Room No. 22 for the first time gets an instant ₹5 discount, paying only ₹20 per task as service charge. The government portal token fee is charged at exact actuals.',
   },
   {
     q: 'क्या छात्रवृत्ति या SSO फॉर्म का भी कोई टोकन कटता है?',
+    qEn: 'Is there any portal token charge for Scholarships or SSO ID?',
     a: 'नहीं! उत्तर मैट्रिक छात्रवृत्ति, NSP, राजस्थान SSO ID और APAAR ID जैसे कई फॉर्मों पर सरकार का कोई टोकन चार्ज नहीं होता (यानी सरकारी टोकन ₹0 बिल्कुल फ्री है)। इसके लिए आपको केवल हमारा ₹25 (या ₹20) सर्विस चार्ज देना होता है।',
+    aEn: 'No! Post-Matric Scholarships, NSP, Rajasthan SSO ID, and APAAR ID do not have any government token fee (official token is ₹0 free). You only pay our ₹25 (or ₹20 first-time) service fee.',
   },
   {
     q: 'OTR (One Time Registration) में कितना टोकन कटता है?',
+    qEn: 'How much is the one-time government token for Rajasthan OTR?',
     a: 'राजस्थान में यदि आप पहली बार OTR करवा रहे हैं तो सामान्य वर्ग (General) के लिए ₹600 और SC / ST / OBC / EWS / दिव्यांग हेतु ₹400 का एकमुश्त सरकारी चालान कटता है। इसका फायदा यह है कि एक बार यह टोकन कटने के बाद आगे के सभी सरकारी भर्ती फॉर्मों में सरकारी टोकन बिल्कुल ₹0 लगता है!',
+    aEn: 'In Rajasthan, first-time OTR has a one-time government challan of ₹600 for General category and ₹400 for SC/ST/OBC/EWS/Divyang. The major benefit is that after paying this once, all subsequent state recruitment forms have ₹0 official token!',
   },
   {
     q: 'माइनर (नाबालिग) पैन कार्ड को मेजर (बालिग) में कैसे बदलवाएं?',
+    qEn: 'How can I update my minor PAN card to a major PAN card after turning 18?',
     a: 'यदि आपकी आयु 18 वर्ष पूरी हो चुकी है, तो आप अपना पुराना पैन कार्ड, आधार कार्ड और नई पासपोर्ट फोटो व सिग्नेचर लेकर रूम 22 आएं। हम NSDL/UTIITSL पोर्टल पर आपका फोटो व हस्ताक्षर अपडेट कर बालिग पैन कार्ड बनवाते हैं।',
+    aEn: 'If you have reached 18 years of age, bring your old PAN card, Aadhaar, new passport photograph, and signature to Room 22. We update your photo and signature on the NSDL/UTIITSL portal to issue a major physical PAN card.',
   },
   {
     q: 'Aadhaar में मोबाइल नंबर क्या ऑनलाइन ही तुरंत जुड़ जाता है?',
+    qEn: 'Can Aadhaar mobile number be updated completely online without fingerprints?',
     a: 'UIDAI के नियमों के अनुसार मोबाइल नंबर और बायोमेट्रिक अपडेट के लिए विद्यार्थी को अधिकृत आधार सेवा केंद्र पर जाकर अपनी उंगलियों के निशान (फिंगरप्रिंट) देने होते हैं। हम आपका पूरा ऑनलाइन फॉर्म भरवाकर स्लॉट/अपॉइंटमेंट बुक करते हैं ताकि आपका समय बचे।',
+    aEn: 'Under UIDAI regulations, mobile number and biometric updates mandate biometric authentication (fingerprints) at an authorized Aadhaar center. We prepare your application and book appointments to save you from long queues.',
   },
   {
     q: 'रूम नंबर 22 में कैसे और कब आएं?',
+    qEn: 'When and how can I visit Room Number 22?',
     a: 'आप All Time (किसी भी समय / 24×7) सीधे Room No. 22 आ सकते हैं। आने से पहले आप Pushpendra (9983977655) या Piyush (9928522228) को WhatsApp या Call करके भी जानकारी ले सकते हैं।',
+    aEn: 'You can visit Room No. 22 All Time (24×7 available). Before coming, you can also reach out to Pushpendra (9983977655) or Piyush (9928522228) on WhatsApp or Call for guidance on required documents.',
   },
 ];
