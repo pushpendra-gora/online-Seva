@@ -1,12 +1,12 @@
 import React from 'react';
-import { Globe, Clock } from 'lucide-react';
+import { Globe, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 export const TopLanguageBanner: React.FC = () => {
-  const { language, setLanguage, t, isHindi } = useLanguage();
+  const { language, setLanguage, openModal, t, isHindi } = useLanguage();
 
   return (
-    <div className="bg-[#050f1d] text-white border-b border-amber-400/30 text-xs py-2 px-3 sm:px-6 relative z-50">
+    <div className="bg-[#050f1d] text-white border-b border-amber-400/30 text-xs py-2 px-3 sm:px-6 relative z-30">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
         
         {/* Left Side: Room 22 All Time Notice */}
@@ -20,13 +20,21 @@ export const TopLanguageBanner: React.FC = () => {
           </span>
         </div>
 
-        {/* Right Side: High Visibility Language Switcher */}
+        {/* Right Side: High Visibility Language Switcher & Select Modal Trigger */}
         <div className="flex items-center gap-2 shrink-0">
-          <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[11px] sm:text-xs">
+          
+          {/* Button to open language selection dialog */}
+          <button
+            type="button"
+            onClick={openModal}
+            className="flex items-center gap-1.5 bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-full text-xs font-bold transition"
+            title="भाषा चयन विंडो खोलें / Open Language Dialog"
+          >
             <Globe className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden xs:inline">{t.chooseLanguage}</span>
-          </div>
+            <span>{isHindi ? 'भाषा विकल्प' : 'Language'}</span>
+          </button>
 
+          {/* Quick toggle pill */}
           <div className="inline-flex p-0.5 rounded-full bg-slate-900 border border-slate-700 shadow-inner">
             <button
               type="button"
