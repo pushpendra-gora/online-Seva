@@ -9,6 +9,7 @@ import { ServiceModal } from './components/ServiceModal';
 import { FAQSection } from './components/FAQSection';
 import { ContactSection } from './components/ContactSection';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { LanguageSelectModal } from './components/LanguageSelectModal';
 import { SERVICES_LIST, ServiceItem, CONTACT_PUSHPENDRA, CONTACT_PIYUSH, ROOM_INFO, getWhatsAppUrl } from './data/servicesData';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 
@@ -226,7 +227,10 @@ function MainAppContent() {
         onClose={() => setActiveModalService(null)}
       />
 
-      {/* 10. Floating WhatsApp and Mobile Quick Bar */}
+      {/* 10. Web Start Language Selector Modal */}
+      <LanguageSelectModal />
+
+      {/* 11. Floating WhatsApp and Mobile Quick Bar */}
       <FloatingWhatsApp />
 
       {/* 11. Global Footer */}
