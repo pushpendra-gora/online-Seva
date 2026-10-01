@@ -1,0 +1,6 @@
+{
+  "name": "विद्यार्थियों के लिए ऑनलाइन सेवा केंद्र | Room 22",
+  "description": "PAN Card (New & Minor to Major), Scholarship, Jan Aadhaar, Aadhaar, SSO, OTR और APAAR ID ऑनलाइन सेवा केंद्र - Room No. 22. Service charge ₹25, पहली बार ₹20 + Token शुल्क.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
