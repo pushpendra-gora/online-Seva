@@ -417,6 +417,10 @@ interface LanguageContextType {
   t: Translations;
   isHindi: boolean;
   isEnglish: boolean;
+  isModalOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+  selectLanguageAndClose: (lang: Language) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -432,10 +436,21 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return 'hi';
   });
 
+  // Modal opens when web starts (fresh visit or session)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(() => {
+    try {
+      const dismissed = sessionStorage.getItem('app_lang_selected_session');
+      return !dismissed; // Automatically true on start unless user chose in current session
+    } catch {
+      return true;
+    }
+  });
+
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     try {
       localStorage.setItem('app_language', lang);
+      sessionStorage.setItem('app_lang_selected_session', 'true');
     } catch {
       // ignore
     }
@@ -443,6 +458,26 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const toggleLanguage = () => {
     setLanguage(language === 'hi' ? 'en' : 'hi');
+  };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    try {
+      sessionStorage.setItem('app_lang_selected_session', 'true');
+    } catch {
+      // ignore
+    }
+  };
+
+  const selectLanguageAndClose = (lang: Language) => {
+    setLanguage(lang);
+    setIsModalOpen(false);
+    try {
+      sessionStorage.setItem('app_lang_selected_session', 'true');
+    } catch {
+      // ignore
+    }
   };
 
   useEffect(() => {
@@ -456,6 +491,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     t: translations[language],
     isHindi: language === 'hi',
     isEnglish: language === 'en',
+    isModalOpen,
+    openModal,
+    closeModal,
+    selectLanguageAndClose,
   };
 
   return (
